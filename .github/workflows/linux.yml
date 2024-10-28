@@ -2,56 +2,56 @@ name: linux
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
     tags:
       - "v*"
 
 jobs:
-  package-rpm:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build-type: [ debug, release ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  # package-rpm:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       build-type: [ debug, release ]
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Set up build variables
-        env:
-          BUILD_TYPE: ${{ matrix.build-type }}
-        run: bash ./.github/scripts/setup_build_variables.sh
+  #     - name: Set up build variables
+  #       env:
+  #         BUILD_TYPE: ${{ matrix.build-type }}
+  #       run: bash ./.github/scripts/setup_build_variables.sh
 
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2
-        with:
-          version: '5.15.2'
-          host: 'linux'
-          install-deps: 'true'
+  #     - name: Install Qt
+  #       uses: jurplel/install-qt-action@v2
+  #       with:
+  #         version: '5.15.2'
+  #         host: 'linux'
+  #         install-deps: 'true'
 
-      - name: Install dependencies
-        run: sudo apt-get install tesseract-ocr libtesseract-dev
+  #     - name: Install dependencies
+  #       run: sudo apt-get install tesseract-ocr libtesseract-dev
 
-      - name: Set up spec file
-        run: bash ./.github/scripts/linux/rpm/setup_spec_file.sh
+  #     - name: Set up spec file
+  #       run: bash ./.github/scripts/linux/rpm/setup_spec_file.sh
 
-      - name: Set up directory structure
-        run: bash ./.github/scripts/linux/rpm/setup_rpm_directory_structure.sh
+  #     - name: Set up directory structure
+  #       run: bash ./.github/scripts/linux/rpm/setup_rpm_directory_structure.sh
 
-      - name: Package rpm
-        run: bash ./.github/scripts/linux/rpm/build_rpm.sh
+  #     - name: Package rpm
+  #       run: bash ./.github/scripts/linux/rpm/build_rpm.sh
 
-      - name: Upload files
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-          bash upload.sh ksnip-plugin-ocr*.rpm
+  #     - name: Upload files
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       run: |
+  #         wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  #         bash upload.sh ksnip-plugin-ocr*.rpm
 
   package-deb:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
-        build-type: [ debug, release ]
+        build-type: [debug, release]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -64,9 +64,9 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
         with:
-          version: '5.12.7'
-          host: 'linux'
-          install-deps: 'true'
+          version: "5.12.7"
+          host: "linux"
+          install-deps: "true"
 
       - name: Install dependencies
         run: sudo apt-get install cmake tesseract-ocr libtesseract-dev devscripts debhelper
