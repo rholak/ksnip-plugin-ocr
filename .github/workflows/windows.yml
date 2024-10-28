@@ -2,7 +2,7 @@ name: windows
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
     tags:
       - "v*"
 
@@ -10,7 +10,7 @@ jobs:
   package-zip:
     strategy:
       matrix:
-        build-type: [ debug, release ]
+        build-type: [debug, release]
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -24,19 +24,19 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
         with:
-          version: '5.15.2'
-          host: 'windows'
-          install-deps: 'true'
-          arch: 'win64_msvc2019_64'
+          version: "5.15.2"
+          host: "windows"
+          install-deps: "true"
+          arch: "win64_msvc2019_64"
 
       - name: Set up nmake
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Build and install zlib
         run: |
-          curl -sSL -o zlib1211.zip https://zlib.net/zlib1211.zip
-          unzip.exe zlib1211.zip
-          cd zlib-1.2.11
+          curl -sSL -o zlib131.zip https://zlib.net/zlib131.zip
+          unzip.exe zlib131.zip
+          cd zlib-1.3.1
           mkdir build
           cd build && cmake .. -G"NMake Makefiles" -DCMAKE_INSTALL_PREFIX="$env:INSTALL_PREFIX" -DCMAKE_BUILD_TYPE="$env:BUILD_TYPE"
           nmake
@@ -160,3 +160,4 @@ jobs:
         run: |
           curl -L https://github.com/probonopd/uploadtool/raw/master/upload.sh --output upload.sh
           bash upload.sh ksnip-plugin-ocr-*.zip
+
